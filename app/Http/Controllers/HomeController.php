@@ -6,14 +6,20 @@ use App\Models\Dish;
 use App\Models\Ingredient;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Constraint\IsEmpty;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class HomeController extends Controller
 {
-    
+    protected $ingredients;
+
+    public function __construct()
+    {
+        $this->ingredients = Ingredient::all();
+    }
     public function index()
     {
         $dishes = Dish::inRandomOrder()->paginate(8);  
-        return view('welcome', ['dishes' => $dishes]);
+        return view('welcome', ['dishes' => $dishes, 'ingredients' => $this->ingredients]);
     }
 
     /**
@@ -77,7 +83,26 @@ class HomeController extends Controller
         $dishes = Dish::where('name','like','%'.$search .'%')->get();
         }
 
-        return view('dishes.search', compact('dishes'));
+        return view('dishes.search', ['dishes' => $dishes, 'ingredients' => $this->ingredients]);
+    }
+    public function ingredient( $ingredient)
+    {
+        try {
+            $ingredient = Ingredient::where('name', $ingredient)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            abort(404);
+        }
+
+       
+
+        $dishes = $ingredient->dishes()->get(); 
+
+        
+        return view('dishes.ingredient', ['dishes' => $dishes, 'ingredient' => $ingredient, 'ingredients' => $this->ingredients]);
+    }
+    public function contatti(Request $request)
+    {
+        return view('contact', ['ingredients' => $this->ingredients]);
     }
     
 }

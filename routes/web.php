@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//      return view('welcome');
+//  });
 
 // Route::get('/ricette/{dish}', [HomeController::class,'show'])->name('show');
 
@@ -28,11 +28,12 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/ricette/ricerca', [HomeController::class, 'search'])->name('dishes.search');
 
+Route::get('/dishes/ingredient/{ingredient}',  [HomeController::class, 'ingredient'])->name('dishes.ingredient');
+Route::get('/contact',  [HomeController::class, 'contatti'])->name('email');
 
-
-Route::get('/contact', function () {
-    return view('contact');
-    })->name('email');
+// Route::get('/contact', function () {
+//     return view('contact');
+//     })->name('email');
 Route::post('/send-email', [EmailController::class, 'sendEmail'])->name('sendEmail');
 
 Route::get('admin/dashboard', function () {

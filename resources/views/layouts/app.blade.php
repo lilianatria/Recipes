@@ -26,6 +26,28 @@
                     <li class="nav-item">
                         <a class="nav-link {{Request::routeIs('home') ? 'active' : ''}}" href="{{ route('home') }}">Home</a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Filtra per ingredienti
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <input type="text"  id="searchIngredient" class="form-control me-2" placeholder="Cerca un ingrediente" aria-label="Search" name="search_ingredient">
+                        <ul  class='list-unstyled'  id="ingredient_list"  >
+                            
+                            
+                           
+                            {{-- @foreach ($ingredients as $ingredient) --}}
+                            
+                                {{-- <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('dishes.ingredient', ['ingredient' => $ingredient->name]) }}">{{ $ingredient->name }}</a>
+    
+                                    </li>
+                            @endforeach --}}
+                        </ul>
+                    </div>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link {{Request::routeIs('admin.dashboard') ? 'active' : ''}}" href="{{ route('admin.dashboard') }}">Dashboard</a>
                     </li>
@@ -40,7 +62,8 @@
                         
                     </li>
                     
-                    
+    
+                
                 </ul>
             </div>
         </div>
@@ -91,6 +114,52 @@
             <p>&copy; 2024 Ricette per tutti. All Rights Reserved.</p>
         </div>
     </footer>
+    <script> 
+        document.addEventListener('DOMContentLoaded', (event) => {
+            ingredients = @json($ingredients);
+            
+          
+            
+            ingredientList = document.getElementById("ingredient_list");
+            baseUrl= 'http://127.0.0.1:8000/dishes/ingredient/'
+            searchIngredient.addEventListener('keyup', function(event) {
 
+                const inputText = event.target.value;
+                const searchIngredient = document.getElementById('searchIngredient');
+
+                const items = document.querySelectorAll('#ingredient_list .filter');
+
+                items.forEach(function(item) {
+                // Ottieni il testo dell'elemento e convertilo in minuscolo
+                    
+                    const itemName = item.textContent.toLowerCase();
+
+                // Verifica se il testo dell'elemento contiene il testo di ricerca
+                    if (itemName.includes(inputText)) {
+                    // Se sì, rimuovi la classe d-none
+                        item.classList.remove('d-none');
+                    } else {
+                    // Altrimenti, aggiungi la classe d-none
+                        item.classList.add('d-none');
+                    
+                    }
+
+                
+                });
+
+
+            
+            });
+            ingredients.forEach(element => {
+                ingredientList.innerHTML += `<li><a class="dropdown-item filter"  href="`+baseUrl+element.name+`">`+element.name+ `</a></li>`
+                
+            });
+             
+
+   
+        });
+
+
+    </script>
 </body>
 </html>
